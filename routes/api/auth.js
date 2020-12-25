@@ -1,8 +1,10 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
-const router = express.Router();
+const jwt = require("jsonwebtoken");
 
 const User = require("../../models/Auth");
+
+const router = express.Router();
 
 // define the home page route
 router.get("/", (req, res) => {
@@ -91,8 +93,41 @@ router.post("/login", (req, res) => {
               .json({ password: "The password that you entered is incorrect" });
           }
 
-          // return the user?
-          return res.json(user);
+          // passwords match, let's get an auth token from jwt
+          // @see - https://www.npmjs.com/package/jsonwebtoken
+
+          // jwt payload
+          const jwtPayload = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+            avatar: user.avatar,
+          };
+
+          // jwt secret key
+          const jwtPrivateKey = process.env.JWTSECRET;
+
+          // sign the token
+          jwt.sign(
+            jwtPayload,
+            jwtPrivateKey,
+            { expiresIn: 3600 },
+            (err, token) => {
+              if (err) {
+                console.error(
+                  "**** an error occurred while getting auth token from jwt ****",
+                  err
+                );
+              }
+
+              // return the token
+              res.json({
+                success: true,
+                msg: "Auth token from jwt received",
+                token: `Bearer ${token}`,
+              });
+            }
+          );
         })
         .catch((err) => console.error("**** err: comparing passwords *****"));
     })
