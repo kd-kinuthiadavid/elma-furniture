@@ -1,6 +1,7 @@
 const express = require("express");
 const dbConnection = require("./config/db");
 const bodyParser = require("body-parser");
+const passport = require("passport");
 
 const auth = require("./routes/api/auth");
 const profile = require("./routes/api/profile");
@@ -12,9 +13,15 @@ const app = express();
 // make db connection
 dbConnection();
 
+// passport config
+require("./config/passport")(passport);
+
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+// passport middleware
+app.use(passport.initialize());
 
 // routes
 app.use("/api/auth", auth);
