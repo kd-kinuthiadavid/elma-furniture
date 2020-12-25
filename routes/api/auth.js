@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const User = require("../../models/Auth");
+const passport = require("passport");
 
 const router = express.Router();
 
@@ -65,7 +66,7 @@ router.post("/register", (req, res) => {
 });
 
 /**
- * @route  POST: api/auth/register
+ * @route  POST: api/auth/login
  * @description register a user
  * @access Public - hey, you need access to register!
  */
@@ -98,6 +99,7 @@ router.post("/login", (req, res) => {
 
           // jwt payload
           const jwtPayload = {
+            id: user.id,
             firstName: user.firstName,
             lastName: user.lastName,
             email: user.email,
@@ -137,4 +139,18 @@ router.post("/login", (req, res) => {
       )
     );
 });
+
+/**
+ * @route  GET: api/auth/current
+ * @description register a user
+ * @access Private
+ */
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    return res.json(req.user);
+  }
+);
+
 module.exports = router;
