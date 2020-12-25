@@ -12,9 +12,9 @@ const app = express();
 dbConnection();
 
 // routes
-app.use("/auth", auth);
-app.use("/profile", profile);
-app.use("/furniture", furniture);
+app.use("/api/auth", auth);
+app.use("/api/profile", profile);
+app.use("/api/furniture", furniture);
 
 const port = process.env.PORT || 5000;
 
