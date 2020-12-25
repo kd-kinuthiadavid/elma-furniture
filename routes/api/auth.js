@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 });
 
 /**
- * @route  GET: api/auth/register
+ * @route  POST: api/auth/register
  * @description register a user
  * @access Public - hey, you need access to register!
  */
