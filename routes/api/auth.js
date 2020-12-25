@@ -62,4 +62,44 @@ router.post("/register", (req, res) => {
     );
 });
 
+/**
+ * @route  POST: api/auth/register
+ * @description register a user
+ * @access Public - hey, you need access to register!
+ */
+router.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // find user by email
+  User.findOne({ email })
+    .then((user) => {
+      // return an error if the user doesn't exist
+      if (!user) {
+        return res
+          .status(404)
+          .json({ email: "A user with that email address was not found" });
+      }
+
+      // if user exists, let's check if the passwords match
+      bcrypt
+        .compare(password, user.password)
+        .then((isMatch) => {
+          if (!isMatch) {
+            return res
+              .status(400)
+              .json({ password: "The password that you entered is incorrect" });
+          }
+
+          // return the user?
+          return res.json(user);
+        })
+        .catch((err) => console.error("**** err: comparing passwords *****"));
+    })
+    .catch((err) =>
+      console.error(
+        "**** login: an error occurred while fetching user by email ***"
+      )
+    );
+});
 module.exports = router;
