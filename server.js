@@ -1,5 +1,6 @@
 const express = require("express");
 const dbConnection = require("./config/db");
+const bodyParser = require("body-parser");
 
 const auth = require("./routes/api/auth");
 const profile = require("./routes/api/profile");
@@ -10,6 +11,10 @@ const app = express();
 
 // make db connection
 dbConnection();
+
+// body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // routes
 app.use("/api/auth", auth);
