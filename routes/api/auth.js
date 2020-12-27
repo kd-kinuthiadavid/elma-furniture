@@ -131,12 +131,13 @@ router.post("/login", (req, res) => {
             }
           );
         })
-        .catch((err) => console.error("**** err: comparing passwords *****"));
+        .catch((err) => res.json({ msg: "err: comparing passwords", err }));
     })
     .catch((err) =>
-      console.error(
-        "**** login: an error occurred while fetching user by email ***"
-      )
+      res.json({
+        msg: "login: an error occurred while fetching user by email",
+        err,
+      })
     );
 });
 
