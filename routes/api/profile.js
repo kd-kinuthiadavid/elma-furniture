@@ -45,14 +45,16 @@ router.post(
   (req, res) => {
     Profile.findOne({ user: req.user.id })
       .then((profile) => {
-        const parsedProfile = {
-          user: req.user.id,
-          phoneNumber: req.body.phoneNumber,
-          orderHistory: req.body.orderHistory && req.body.orderHistory,
-          shippingInfo: req.body.shippingInfo && req.body.shippingInfo,
-          wishList: req.body.wishList && req.body.wishList,
-          cart: req.body.cart && req.body.cart,
-        };
+        const parsedProfile = {};
+        parsedProfile.user = req.user.id;
+        if (req.body.phoneNumber)
+          parsedProfile.phoneNumber = req.body.phoneNumber;
+        if (req.body.orderHistory)
+          parsedProfile.orderHistory = req.body.orderHistory;
+        if (req.body.shippingInfo)
+          parsedProfile.shippingInfo = req.body.shippingInfo;
+        if (req.body.wishList) parsedProfile.wishList = req.body.wishList;
+        if (req.body.cart) parsedProfile.cart = req.body.cart;
 
         // if profile exists; let's update it.
         if (profile) {
