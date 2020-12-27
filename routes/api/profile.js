@@ -16,6 +16,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Profile.findOne({ user: req.user.id })
+      .populate("user", ["firstName", "lastName", "email", "avatar"])
       .then((profile) => {
         if (!profile) {
           return res.status(404).json({ msg: "We couldn't find that profile" });
