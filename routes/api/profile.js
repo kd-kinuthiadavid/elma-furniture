@@ -75,18 +75,33 @@ router.post(
         }
 
         // if profile doesn't exist; let's create one
+
         const newProfile = new Profile(parsedProfile);
 
-        // let's save the profile
-        newProfile
-          .save()
-          .then((profile) =>
-            res.json({ msg: "profile was successfully created", data: profile })
-          )
-          .catch((err) =>
-            res.status(500).json({ msg: "err: profile was not created", err })
-          );
+        // let's make sure that the phone number is unique
+        Profile.findOne({ phoneNumber: req.body.phoneNumber }).then((prof) => {
+          if (prof) {
+            return res.status(400).json({
+              msg: "err: user with that phone number already exists !!!",
+            });
+          }
+          // let's save the profile
+          newProfile
+            .save()
+            .then((profile) =>
+              res.json({
+                msg: "profile was successfully created",
+                data: profile,
+              })
+            )
+            .catch((err) =>
+              res.status(400).json({ msg: "err: profile was not created", err })
+            );
+        });
       })
+      .catch((err) =>
+        console.error("err when fetching profile by phone number", err)
+      )
       .catch((err) =>
         res.json({
           msg: "err: an error occurred while creating/updating a profile",
