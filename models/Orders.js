@@ -11,7 +11,7 @@ const OrdersSchema = new Schema({
     dropDups: true,
   },
   products: [FurnitureSchema],
-  user: {
+  profile: {
     type: Schema.Types.ObjectId,
     ref: "profile",
   },
